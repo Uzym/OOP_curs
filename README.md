@@ -1,22 +1,41 @@
-pip install -U openmim
-mim install mmcv-full
-git clone https://github.com/open-mmlab/mmpose.git
-cd mmpose
-pip install -r requirements.txt
-pip install -v -e .
-# "-v" means verbose, or more output
-# "-e" means installing a project in editable mode,
-# thus any local modifications made to the code will take effect without reinstallation.
-pip install mmpose
-python demo/top_down_img_demo.py \
-    configs/face/2d_kpt_sview_rgb_img/topdown_heatmap/aflw/hrnetv2_w18_aflw_256x256.py \
-    https://download.openmmlab.com/mmpose/face/hrnetv2/hrnetv2_w18_aflw_256x256-f2bbc62b_20210125.pth \
-    --img-root tests/data/aflw/ --json-file tests/data/aflw/test_aflw.json \
-    --out-img-root vis_results
-top_down_img_demo.py  - разобрать
-++++++++++++++
+# ООП Курсовой проект
+**Доска проекта** ``https://miro.com/app/board/uXjVPU8hj4c=/``
 
+## Задачи
+### Павлов
+1. Захерачить скрипт по auto-output keypoints в питон
+2. Начать ботать фронт и бек
+3. 
 
-СКРИПТ ДЛЯ 1 ФОТКИ + тензор координат
+### Лютоев
+1. Поработать с картинкой: попробовать наложить спрайт на определенные точки
+2. 
+3. 
 
-python3 demo/face_img_demo.py     configs/face/2d_kpt_sview_rgb_img/topdown_heatmap/aflw/hrnetv2_w18_aflw_256x256.py     https://download.openmmlab.com/mmpose/face/hrnetv2/hrnetv2_w18_aflw_256x256-f2bbc62b_20210125.pth     --img-root tests/data/aflw/     --img 0.jpeg --out-img-root vis_results
+## Проект Pose estimation
+
+Есть готовая обученная ml-model-ка и она пашет. Теперь ее привести в норм вид, создать скрипт, накинуть фронта и бека, все это в докер.
+
+## фронтенд
+ебашим телеграмм-бота который принимает сообщения и фотографии от пользователей и отвечает им
+### бота
+#### замечания
+1. нужно смотреть на нагрузку сервера и иногда отказывать пользователям
+2. или можно просто установить лимит
+3. нужно запретить человеку присылать миллионы фоток до конца обработки первой
+#### сценарий работы
+1. /start - бот приветствует человека и ждёт от него фото
+2. бот считывает фото и пересылает его на обработку вместе id человека которому нужно отправить результат
+3. бот принимает фото с id отправителя и отвечает ему
+5. (НЕОБЯЗАТЕЛЬНО) пользователь может пожаловаться на неправильную работу и предложить свой вариант
+### то что нужно изучить чтобы его написать
+1. посмотреть telegram API
+2. BotFather (или как то так называется)
+3. работа с внешним api по http
+4. реализацию других людей
+
+## бекэнд
+нужно понять как это всё будет работать
+### то что нужно изучить чтобы его написать
+1. что выбрать для дальнейшей разработки (нейронку изначально понятно что будем обучать на питоне) (Может использовать несколько языков в проекте? (ладно идея не очень))
+2. изучить docker и kubernetes
