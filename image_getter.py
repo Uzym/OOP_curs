@@ -14,7 +14,7 @@ class ImageGetter():
         self.outp_name = self.inp_name.split('.')[0] + '.npy'
         self.script = './mmpose/keypoints_script.sh'
         
-    def __get__(self, index):
+    def get(self):
         subprocess.call([self.script, self.inp_name])
         self.keypoints = np.load(self.outp_path + self.outp_name)
         self.image = cv2.imread(self.inp_path + self.inp_name)
