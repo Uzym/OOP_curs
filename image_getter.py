@@ -18,4 +18,11 @@ class ImageGetter():
         subprocess.call([self.script, self.inp_name])
         self.keypoints = np.load(self.outp_path + self.outp_name)
         self.image = cv2.imread(self.inp_path + self.inp_name)
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB) 
         return {'image': self.image, 'keypoints': self.keypoints}
+
+    def show(self):
+        obj = self.get()
+        plt.axis('off')
+        plt.imshow(obj['image'])
+        plt.scatter(obj['keypoints'][:, 0], obj['keypoints'][:, 1], s=10, c='limegreen')
