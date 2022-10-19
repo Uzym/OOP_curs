@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import cv2
 import subprocess
 
@@ -13,9 +12,9 @@ class ImageGetter():
         self.outp_path = r'./mmpose/vis_results/'
         self.outp_name = self.inp_name.split('.')[0] + '.npy'
         self.script = './mmpose/keypoints_script.sh'
+        subprocess.call([self.script, self.inp_name])
         
     def get(self):
-        subprocess.call([self.script, self.inp_name])
         self.keypoints = np.load(self.outp_path + self.outp_name)
         self.image = cv2.imread(self.inp_path + self.inp_name)
         self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB) 
