@@ -35,7 +35,6 @@ class ImageHandler():
         plt.legend(loc=2, prop={'size': 6})
 
 
-
 class GlassesFilter(ImageHandler):
 
     def __init__(self, data, filter_path):
@@ -73,7 +72,7 @@ class MoustacheFilter(ImageHandler):
         self.filter_path = filter_path
 
     def overlay(self):
-        x_top_left = int(self.segments_dict['nose'][0][0])
+        x_top_left = int(self.segments_dict['mouth'][0][0])
         y_top_left = int(self.segments_dict['nose'][1][0])
         high = int(abs(self.segments_dict['nose'][1][0] - self.segments_dict['mouth'][1][0]))
         width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][0])))
@@ -86,3 +85,29 @@ class MoustacheFilter(ImageHandler):
             roi[filter_it[:,0], filter_it[:,1], i] = filter[filter_it[:,0], filter_it[:,1], i]
         self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width] = roi
         return self.image
+
+
+class SigareteFiltr(ImageHandler):
+
+    def __init__(self, data, filter_path):
+        super().__init__(data)
+        self.segments_dict = super().segmentation()
+        self.image = np.copy(self.image)
+        self.filter_path = filter_path
+
+    def overlay(self):
+        x_top_left = int(self.segments_dict['mouth'][0][1])
+        y_top_left = int(self.segments_dict['mouth'][1][1])
+        high = int(abs(self.segments_dict['mouth'][1][0] - self.segments_dict['beard'][1][0]))
+        width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][1])))
+        filter = cv2.imread(self.filter_path, cv2.IMREAD_UNCHANGED)
+        filter = cv2.resize(filter, (width, high), interpolation=cv2.INTER_CUBIC)
+        filter = cv2.cvtColor(filter, cv2.COLOR_RGB2RGBA)
+        roi = self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width]
+        filter_it = np.argwhere(filter[:,:,3] > 0)
+        for i in range(3):
+            roi[filter_it[:,0], filter_it[:,1], i] = filter[filter_it[:,0], filter_it[:,1], i]
+        self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width] = roi
+        return self.image
+
+
