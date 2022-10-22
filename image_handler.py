@@ -35,79 +35,41 @@ class ImageHandler():
         plt.legend(loc=2, prop={'size': 6})
 
 
-class GlassesFilter(ImageHandler):
+class Filter(ImageHandler):
 
     def __init__(self, data, filter_path):
         super().__init__(data)
         self.segments_dict = super().segmentation()
         self.image = np.copy(self.image)
         self.filter_path = filter_path
-
-    def overlay(self):
-        x_top_left = int(self.segments_dict['l_eyebrow'][0][0])
-        y_top_left = int(self.segments_dict['l_eyebrow'][1][0])
-        high = int(abs(self.segments_dict['l_eye'][1][2] - self.segments_dict['nose'][1][0]))
-        width = int(abs((self.segments_dict['r_eyebrow'][0][2]) - (self.segments_dict['l_eyebrow'][0][0])))
-        eye_high = int(abs((self.segments_dict['r_eyebrow'][1][2]) - (self.segments_dict['l_eyebrow'][1][0])))
-        corner = math.degrees(np.arctan(np.array(eye_high / width)))
-        filter = cv2.imread(self.filter_path, cv2.IMREAD_UNCHANGED)
-        filter = cv2.resize(filter, (width, high), interpolation=cv2.INTER_CUBIC)
-        filter = cv2.cvtColor(filter, cv2.COLOR_RGB2RGBA)
-        mat = cv2.getRotationMatrix2D((width / 2, high / 2), corner, 1.0)
-        filter = cv2.warpAffine(filter, mat, (width, high))
-        roi = self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width]
-        filter_it = np.argwhere(filter[:,:,3] > 0)
-        for i in range(3):
-            roi[filter_it[:,0], filter_it[:,1], i] = filter[filter_it[:,0], filter_it[:,1], i]
-        self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width] = roi
-        return self.image
-
-
-class MoustacheFilter(ImageHandler):
     
-    def __init__(self, data, filter_path):
-        super().__init__(data)
-        self.segments_dict = super().segmentation()
-        self.image = np.copy(self.image)
-        self.filter_path = filter_path
-
-    def overlay(self):
-        x_top_left = int(self.segments_dict['mouth'][0][0])
-        y_top_left = int(self.segments_dict['nose'][1][0])
-        high = int(abs(self.segments_dict['nose'][1][0] - self.segments_dict['mouth'][1][0]))
-        width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][0])))
+    def overlay(self, filter_type):
+        if filter_type == 'glasses':
+            __x_top_left = int(self.segments_dict['l_eyebrow'][0][0])
+            __y_top_left = int(self.segments_dict['l_eyebrow'][1][0])
+            __high = int(abs(self.segments_dict['l_eye'][1][2] - self.segments_dict['nose'][1][0]))
+            __width = int(abs((self.segments_dict['r_eyebrow'][0][2]) - (self.segments_dict['l_eyebrow'][0][0])))
+            eye___high = int(abs((self.segments_dict['r_eyebrow'][1][2]) - (self.segments_dict['l_eyebrow'][1][0])))
+            corner = math.degrees(np.arctan(np.array(eye___high / __width)))
+        elif filter_type == 'moustache':
+            __x_top_left = int(self.segments_dict['mouth'][0][0])
+            __y_top_left = int(self.segments_dict['nose'][1][0])
+            __high = int(abs(self.segments_dict['nose'][1][0] - self.segments_dict['mouth'][1][0]))
+            __width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][0])))
+        elif filter_type == 'sigarete':
+            __x_top_left = int(self.segments_dict['mouth'][0][1])
+            __y_top_left = int(self.segments_dict['mouth'][1][1])
+            __high = int(abs(self.segments_dict['mouth'][1][0] - self.segments_dict['beard'][1][0]))
+            __width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][1])))
         filter = cv2.imread(self.filter_path, cv2.IMREAD_UNCHANGED)
-        filter = cv2.resize(filter, (width, high), interpolation=cv2.INTER_CUBIC)
+        filter = cv2.resize(filter, (__width, __high), interpolation=cv2.INTER_CUBIC)
         filter = cv2.cvtColor(filter, cv2.COLOR_RGB2RGBA)
-        roi = self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width]
+        if filter_type == 'glasses':
+            mat = cv2.getRotationMatrix2D((__width / 2, __high / 2), corner, 1.0)
+            filter = cv2.warpAffine(filter, mat, (__width, __high))
+        roi = self.image[__y_top_left:__y_top_left+__high, __x_top_left:__x_top_left+__width]
         filter_it = np.argwhere(filter[:,:,3] > 0)
         for i in range(3):
             roi[filter_it[:,0], filter_it[:,1], i] = filter[filter_it[:,0], filter_it[:,1], i]
-        self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width] = roi
+        self.image[__y_top_left:__y_top_left+__high, __x_top_left:__x_top_left+__width] = roi
         return self.image
-
-
-class SigareteFiltr(ImageHandler):
-
-    def __init__(self, data, filter_path):
-        super().__init__(data)
-        self.segments_dict = super().segmentation()
-        self.image = np.copy(self.image)
-        self.filter_path = filter_path
-
-    def overlay(self):
-        x_top_left = int(self.segments_dict['mouth'][0][1])
-        y_top_left = int(self.segments_dict['mouth'][1][1])
-        high = int(abs(self.segments_dict['mouth'][1][0] - self.segments_dict['beard'][1][0]))
-        width = int(abs((self.segments_dict['mouth'][0][2]) - (self.segments_dict['mouth'][0][1])))
-        filter = cv2.imread(self.filter_path, cv2.IMREAD_UNCHANGED)
-        filter = cv2.resize(filter, (width, high), interpolation=cv2.INTER_CUBIC)
-        filter = cv2.cvtColor(filter, cv2.COLOR_RGB2RGBA)
-        roi = self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width]
-        filter_it = np.argwhere(filter[:,:,3] > 0)
-        for i in range(3):
-            roi[filter_it[:,0], filter_it[:,1], i] = filter[filter_it[:,0], filter_it[:,1], i]
-        self.image[y_top_left:y_top_left+high, x_top_left:x_top_left+width] = roi
-        return self.image
-
-
