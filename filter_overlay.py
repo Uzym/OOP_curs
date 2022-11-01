@@ -17,8 +17,8 @@ class FilterOverlay():
     def get_image(self, chat_id, filter):
         self.filter = filter
         self.name = chat_id + '.jpg'
-        i = image_getter.ImageGetter(self.name)
-        self.dict = i.get()
+        i = image_getter.ImageGetter()
+        self.dict = i.get(self.name)
         self.filter_path = self.filter_root + filter + '.png'
         fr = self.filter_dict[filter]
         self.data = image_handler.Filter(self.dict, self.filter_path)

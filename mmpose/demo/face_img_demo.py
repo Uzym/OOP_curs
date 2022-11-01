@@ -73,8 +73,8 @@ def main():
 
     args = parser.parse_args()
 
-    assert args.show or (args.out_img_root != '')
-    assert args.img != ''
+    # assert args.show #or (args.out_img_root != '')
+    # assert args.img != ''
 
     # build the pose model from a config file and a checkpoint file
     pose_model = init_pose_model(
@@ -138,5 +138,7 @@ def main():
     keypoints_path = r'./mmpose/vis_results'
     keypoints_file_name = args.img.split('.')[0]
     np.save(f'{keypoints_path}/{keypoints_file_name}.npy', pose_results[0]['keypoints'])
+
+
 if __name__ == '__main__':
     main()

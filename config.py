@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "5286234589:AAFlkQObco_9UBbyFplKJjJxe6Ojiri6dEQ"
+TOKEN = "5468492351:AAFwz4kDSSXhGDWIxcfOssOGDtf1Nda2wCQ"
 
 filter_list = [('Черные очки', 'sunglasses', 'Просто крутые черные очки че тут ещё говорить?'),
                ('Усы Гитлера', 'moustache_hitler', 'Неодобряем ваши интересы'),
@@ -22,12 +22,14 @@ start_message = "Отправте мне фотографию с вашим ли
 
 callback_filter_message = "Ваша фотография в очереди. Ожидайте"
 callback_filter_wait_message = "Подождите пока обработается ваш запрос"
+callback_process_complete = "Результат"
 
 MESSAGES = {
     'start': start_message,
     'help': help_message,
     'filters': filter_list_message,
     'filter': callback_filter_message,
+    'bot_process_complete': callback_process_complete,
     'filter_wait': callback_filter_wait_message,
     'get_image': "Доступные фильтры:"
 }

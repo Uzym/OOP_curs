@@ -43,7 +43,7 @@ async def process_get_image(message: types.Message):
     file_url = message.photo[-1]
     pr.requests_queue.new_request(message.from_user.id, file_url)
     file_info = await bot.get_file(file_url.file_id)
-    path = './mmpose/tests/data/aflw/'
+    path = './images/'
     file_name = file_info.file_path.split('photos/')[1].split('.')[0]
     pr.requests_queue.add_name(message.from_user.id, file_name)
     await file_url.download(path + file_info.file_path.split('photos/')[1])
@@ -59,7 +59,7 @@ async def process_callback_filter(callback_query: types.CallbackQuery):
     outp_path = filterOverlay.get_path(name, filter)
     photo = open(outp_path, 'rb')
     await bot.send_photo(callback_query.from_user.id, photo)
-    await bot.send_message(callback_query.from_user.id, MESSAGES['filter'])
+    #await bot.send_message(callback_query.from_user.id, MESSAGES['filter'])
 
 @dp.callback_query_handler(state=BotStates.BOT_WAIT_A_PROCESS)
 async def process_callback_wait(callback_query: types.CallbackQuery):
