@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  rabbit:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    hostname: rabbit
+    volumes:
+      - ./rabbitmq/advanced.config:/etc/rabbitmq/advanced.config
+    networks:
+      - rabbit_net
+
+  bot:
+    build: bot/
+    command: python3 app.py
+    depends_on:
+      - rabbit
+    environment:
+      AMQP_URL: 'amqp://rabbit?connection_attempts=10&retry_delay=10'
+    networks:
+      - rabbit_net
+    restart: on-failure
+
+  server:
+    build: server/
+    command: python3 server.py
+    depends_on:
+      - rabbit
+      - bot
+    environment:
+      AMQP_URL: 'amqp://rabbit?connection_attempts=10&retry_delay=10'
+    restart: on-failure
+    networks:
+      - rabbit_net
+
+networks:
+    rabbit_net:
+        driver: bridge

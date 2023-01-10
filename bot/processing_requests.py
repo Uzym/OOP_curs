@@ -1,35 +1,44 @@
 import random
 from dataclasses import dataclass
+import json
+import os
+import pika
+
+file_path = './'
 
 @dataclass
 class Request:
     chat_id: str
-    file_url: str # нужно ещё обсудить с ваней что именно ему тут нужно возвращать
+    file_url: str
     filter_: str
 
-class ProcessingRequests: # сделать так чтобы это был синглтон
+class ProcessingRequests:
     def __init__(self):
         self.request_dict = dict()
+        self.amqp_url = os.environ["AMQP_URL"]
 
-    def new_request(self, chat_id, file_url):
+    @staticmethod
+    def json_deserializer(m):
+        return json.loads(m.decode('utf-8'))
+
+    @staticmethod
+    def json_serializer(data):
+        return json.dumps(data).encode("utf-8")
+
+    def new_request(self, chat_id, name):
         if not(chat_id in self.request_dict.keys()):
-            self.request_dict[chat_id] = [file_url, '', 'wait_filter']
+            self.request_dict[chat_id] = {'chat_id': chat_id, 'filter': '', 'name': name}
         else:
             return False
 
-    def add_filter(self, chat_id, filter):
-        if self.request_dict[chat_id][2] == 'wait_filter':
-            self.request_dict[chat_id][1] = filter
-            self.request_dict[chat_id][2] = 'wait'
-        else: # написать нормальные ошибки
-            return False
+    def add_name(self, chat_id, name):
+        self.request_dict[chat_id]['name'] = name
 
-    def get_request(self) -> Request: # тут тоже надо нормальные ошибки
-        chat_id, value = '', ['', '', '']
-        while value[2] != 'wait': # переписать
-            chat_id, value = random.choice(list(self.request_dict.items()))
-        self.request_dict[chat_id].append("in_process")
-        return Request(chat_id=chat_id, file_url=value[0], filter_=value[1])
+    def add_filter(self, chat_id, filter):
+        self.request_dict[chat_id]['filter'] = filter
+
+    def get_request(self, chat_id) -> Request:
+        return self.request_dict[chat_id]
 
     def __str__(self):
         return str(self.request_dict)
