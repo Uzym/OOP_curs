@@ -10,7 +10,7 @@
 - [Server](#Server)
 
 ### Бот
-[bot](/bot)
+[bot](/bot) - telegram бот для общения с пользователем
 - [app](/bot/app.py) - Запуск бота, хендлеры сообщений, связь с RabbitMQ и s3.
 - [processing_requests](/bot/processing_requests.py) - Формирование запроса на очередь в несколько этапов.
 - [config](/bot/config.py) - Настройки поведения бота
