@@ -34,7 +34,7 @@ https://youtu.be/RzA4Gg6yvUU
 <img width="720" alt="image" src="./architect.jpeg">
 
 ### Запуск через docker compose
-Установить для бота токен и пароль для redis, в файле docker-compose
+Установить для s3 acsess_key и acsess_secret_key, в файле tokens3.py
 `docker-compose -f docker-compose.yml up --build`
 
 ### Запуск через kubernetes
