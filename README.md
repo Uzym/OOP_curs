@@ -29,7 +29,7 @@
 - [filter-overlay](server/filter-overlay.py) - Связь модели и сервера
 
 ### Архитектура 
-<img width="346" alt="image" src="./architect.jpeg">
+<img width="720" alt="image" src="./architect.jpeg">
 
 ### Запуск через docker compose
 Установить для бота токен и пароль для redis, в файле docker-compose
