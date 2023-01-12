@@ -34,13 +34,13 @@ https://youtu.be/RzA4Gg6yvUU
 <img width="720" alt="image" src="./architect.jpeg">
 
 ### Запуск через docker compose
-Установить для s3 acsess_key и acsess_secret_key, в файле tokens3.py
+Установить для s3 acsess_key и acsess_secret_key, в файле tokens3.py\
 `docker-compose -f docker-compose.yml up --build`
 
 ### Запуск через kubernetes
 
 Запуск всех манифестов
 
-`kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"`
+`kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"`\
 `kubectl apply -f "/manifests"`
 
