@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot
+  labels:
+    app: bot
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: bot_new3_bot:latest
+          imagePullPolicy: Never
+          env:
+            - name: SECRET_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-default-user
+                  key: username
+                  optional: false
+            - name: SECRET_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-default-user
+                  key: password
+                  optional: false
+            - name: AMQP_URL
+              value: 'amqp://rabbit?connection_attempts=10&retry_delay=10'
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot-auth
+                  key: password
+                  optional: false
+      restartPolicy: Always

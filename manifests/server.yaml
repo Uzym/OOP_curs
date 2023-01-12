@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  labels:
+    app: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: bot_new3_server:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - mountPath: /model
+              name: storage-model
+          env:
+            - name: SECRET_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-default-user
+                  key: username
+                  optional: false
+            - name: SECRET_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-default-user
+                  key: password
+                  optional: false
+            - name: AMQP_URL 
+              value: 'amqp://rabbit?connection_attempts=10&retry_delay=10'
+      volumes:
+      - name: storage-model
+      hostPath:
+        path: /data
+        type: Directory
