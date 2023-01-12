@@ -4,6 +4,8 @@
 
 ## Видео-презентация проекта
 
+https://youtu.be/RzA4Gg6yvUU
+
 ## Структура проекта
 - [Bot](#Bot)
 - [Rabbitmq](#Rabbitmq)
